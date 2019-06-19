@@ -1,10 +1,17 @@
 from pynput.keyboard import Key, Controller
 from inputs import *
+from sys import stderr
+from logging import *
+import time
 
+
+#For outputs
+maxsteer_angle = int(30) #in degrees
+maxbreak = int(75) #hardest breaking allowed
+maxaccel = int(80) #most power
 
 keyboard = Controller()
 i = 0
-clean = abs 
 
 #Checks for usable gamepads
 #for device in devices:
@@ -15,8 +22,33 @@ steer = int()
 base = True
 
 
+def log():
+        l  = getLogger()
+        sh = StreamHandler(stderr)
+        sh.setLevel(DEBUG)
+        f  = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        sh.setFormatter(f)
+        l.addHandler(sh)
+        l.setLevel(DEBUG)
+
 #For gamepads
 while 1:
+        
+        #logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+        l  = getLogger()
+        sh = StreamHandler(stderr)
+        sh.setLevel(DEBUG)
+        f  = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        sh.setFormatter(f)
+        l.addHandler(sh)
+        l.setLevel(DEBUG)
+        data = steer,accel,brake
+        #logging.warning("Logged")
+        #starttime=time.time()
+        #while True:
+        #  print(steer)
+        #  l.info('%s', data)
+        #  time.sleep(0.5 - ((time.time() - starttime) % 0.5))
         events = get_gamepad()
         for event in events:
                 1
@@ -71,6 +103,7 @@ while 1:
                 
         if 'ABS_RZ' == event.code:
             accel = round((event.state/255)*100, 1)
+            #l.info('%s', data)
             print(accel)
 
         if 'ABS_Z' == event.code:
@@ -79,18 +112,21 @@ while 1:
                 brake = 0.0
             if accel > 0:
                 accel = abs(0)
+            #l.info('%s', data)
             print(brake)
         if 'ABS_RX' == event.code:
             #print(event.state)
             steer = round((event.state/32768)*100, 1)
             #print(steer)
-            if 0 < abs(event.state) < 3500:
-                steer = 0 
+            if 0 < abs(event.state) < 3525:
+                steer = round(0, 1)
                 if base == True:
                     base = False
                     print(steer)
-            if abs(event.state) >= 3500:
+                    #l.info('%s', data)
+            if abs(event.state) >= 3525:
                 print(steer)
+                #l.info('%s', data)
                 base = True
         if 'ABS_RX' >= event.code:
             if abs(event.state) >= 32765:
@@ -98,7 +134,8 @@ while 1:
         if 'ABS_RX' >= event.code:
             #steer = (event.state/)
             1
-
+        #if steer == 0 or brake == 0 or accel == 0:
+        #    l.info('%s', data)
 
     #    if 'ABS_RY' == event.code:
             #print(event.state)
@@ -119,7 +156,7 @@ while 1:
   #          1
 
 
-
+#logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 
 
