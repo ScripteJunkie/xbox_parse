@@ -4,10 +4,18 @@ from inputs import *
 
 keyboard = Controller()
 i = 0
+clean = abs 
 
-for device in devices:
-    print(device)
+#Checks for usable gamepads
+#for device in devices:
+#    print(device)
+accel = int()
+brake = int()
+steer = int()
+base = True
 
+
+#For gamepads
 while 1:
         events = get_gamepad()
         for event in events:
@@ -17,7 +25,14 @@ while 1:
                 #print(event.ev_type)
         if event.code == 'BTN_TL':
               #i += 1
-              print('help', i)
+              #print('click', i)
+            if event.state == 1:
+                print("BLINK_L")
+        if event.code == 'BTN_TR':
+              #i += 1
+              #print('click', i)
+            if event.state == 1:
+                print("BLINK_R")
         if event.code == 'BTN_START' :
               break
         if 'BTN_SELECT' == event.code:
@@ -60,8 +75,10 @@ while 1:
 
         if 'ABS_Z' == event.code:
             brake = round((event.state/255)*-100, 1)
-            accel = 0
-            print(accel)
+            if brake == (-0.0):
+                brake = 0.0
+            if accel > 0:
+                accel = abs(0)
             print(brake)
         if 'ABS_RX' == event.code:
             #print(event.state)
@@ -69,17 +86,37 @@ while 1:
             #print(steer)
             if 0 < abs(event.state) < 3500:
                 steer = 0 
-                print(steer)
-                1
+                if base == True:
+                    base = False
+                    print(steer)
             if abs(event.state) >= 3500:
                 print(steer)
-                1
+                base = True
         if 'ABS_RX' >= event.code:
             if abs(event.state) >= 32765:
                 print("FULL")
         if 'ABS_RX' >= event.code:
             #steer = (event.state/)
             1
+
+
+    #    if 'ABS_RY' == event.code:
+            #print(event.state)
+     #       steer = round((event.state/32768)*100, 1)
+            #print(steer)
+    #        if 0 < abs(event.state) < 3500:
+    #            steer = 0 
+   #             print(steer)
+  #              1
+   #         if abs(event.state) >= 3500:
+   #             print(steer)
+  #              1
+  #      if 'ABS_RY' >= event.code:
+  #          if abs(event.state) >= 32765:
+ #               print("FULL")
+  #      if 'ABS_RY' >= event.code:
+            #steer = (event.state/)
+  #          1
 
 
 
